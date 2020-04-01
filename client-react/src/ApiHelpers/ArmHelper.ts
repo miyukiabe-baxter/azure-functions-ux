@@ -162,7 +162,7 @@ const MakeArmCall = async <T>(requestObject: ArmRequestObject<T>): Promise<HttpR
         success: resSuccess,
         status: res.httpStatusCode,
         headers: res.headers,
-        error: resSuccess ? null : res.content,
+        error: resSuccess ? null : extractErrorObject(res.content),
       },
       data: resSuccess ? res.content : null,
     };
@@ -177,12 +177,28 @@ const MakeArmCall = async <T>(requestObject: ArmRequestObject<T>): Promise<HttpR
       success: responseSuccess,
       status: response.status,
       headers: response.headers,
-      error: responseSuccess ? null : response.data,
+      error: responseSuccess ? null : extractErrorObject(response.data),
     },
     data: response.data,
   };
 
   return retObj;
+};
+
+const extractErrorObject = (content: any): any => {
+  if (!content) {
+    return null;
+  }
+
+  const error = content.error !== undefined ? content.error : content;
+
+  if (error && error.message) {
+    const message = error.message;
+    delete error.message;
+    error.Message = message;
+  }
+
+  return error;
 };
 
 export const MakePagedArmCall = async <T>(requestObject: ArmRequestObject<ArmArray<T>>): Promise<ArmObj<T>[]> => {
