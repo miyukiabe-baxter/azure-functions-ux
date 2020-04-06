@@ -162,7 +162,7 @@ const MakeArmCall = async <T>(requestObject: ArmRequestObject<T>): Promise<HttpR
         success: resSuccess,
         status: res.httpStatusCode,
         headers: res.headers,
-        error: resSuccess ? null : extractErrorObject(res.content),
+        error: resSuccess ? null : res.content,
       },
       data: resSuccess ? res.content : null,
     };
@@ -177,7 +177,7 @@ const MakeArmCall = async <T>(requestObject: ArmRequestObject<T>): Promise<HttpR
       success: responseSuccess,
       status: response.status,
       headers: response.headers,
-      error: responseSuccess ? null : extractErrorObject(response.data),
+      error: responseSuccess ? null : response.data,
     },
     data: response.data,
   };
@@ -185,25 +185,33 @@ const MakeArmCall = async <T>(requestObject: ArmRequestObject<T>): Promise<HttpR
   return retObj;
 };
 
-// Error objects returned don't have a consistent format, so we need to extract error
-// objects based on known formats and convert to a common format.
-const extractErrorObject = (content: any): any => {
-  if (!content) {
-    return null;
+export const getErrorMessage = (error: any, recursionLimit: number = 1): string => {
+  return _extractErrorMessage(error, recursionLimit);
+};
+
+export const getErrorMessageOrStringify = (error: any, recursionLimit: number = 1): string => {
+  const extractedError = _extractErrorMessage(error, recursionLimit);
+  return !!extractedError ? extractedError : JSON.stringify(error || {});
+};
+
+const _extractErrorMessage = (error: any, recursionLimit: number): string => {
+  if (!error) {
+    return '';
   }
 
-  // Some errors are wrapped in an outer "error" object. If an outer "error" wrapper is
-  // present, just use the inner "error" object.
-  const error = content.error !== undefined ? content.error : content;
-
-  // Ensure that the name of the "message" property has the proper casing ("message" instead of "Message").
-  if (error && error.Message) {
-    const message = error.Message;
-    delete error.Message;
-    error.message = message;
+  if (Object(error) !== error) {
+    // The error is a primative type, not an object.
+    // If it is a string, just return the value. Otherwise, return any empty string because there's nothing to extract.
+    return typeof error === 'string' ? (error as string) : '';
   }
 
-  return error;
+  // Check if a "message" property is present on the error object.
+  if (error.message || error.Message) {
+    return error.message || error.Message;
+  }
+
+  // No "message" property was present, so check if there is an inner error object with a "message" property.
+  return recursionLimit ? _extractErrorMessage(error.error, recursionLimit - 1) : '';
 };
 
 export const MakePagedArmCall = async <T>(requestObject: ArmRequestObject<ArmArray<T>>): Promise<ArmObj<T>[]> => {

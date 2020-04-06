@@ -39,6 +39,7 @@ import { isFunctionApp } from '../../../utils/arm-utils';
 import { StartupInfoContext } from '../../../StartupInfoContext';
 import { LogCategories } from '../../../utils/LogCategories';
 import { KeyValue } from '../../../models/portal-models';
+import { getErrorMessage } from '../../../ApiHelpers/ArmHelper';
 
 export interface AppSettingsDataLoaderProps {
   children: (props: {
@@ -340,10 +341,10 @@ const AppSettingsDataLoader: React.FC<AppSettingsDataLoaderProps> = props => {
       }
       portalContext.stopNotification(notificationId, true, t('configUpdateSuccess'));
     } else {
-      const siteError = siteResult!.metadata.error && siteResult!.metadata.error.message;
-      const configError = configResult!.metadata.error && configResult!.metadata.error.message;
-      const slotConfigError = slotConfigNamesResult && slotConfigNamesResult.metadata.error && slotConfigNamesResult.metadata.error.message;
-      const storageMountsError = storageMountsResult && storageMountsResult.metadata.error && storageMountsResult.metadata.error.message;
+      const siteError = getErrorMessage(siteResult!.metadata.error);
+      const configError = getErrorMessage(configResult!.metadata.error);
+      const slotConfigError = getErrorMessage(slotConfigNamesResult && slotConfigNamesResult.metadata.error);
+      const storageMountsError = getErrorMessage(storageMountsResult && storageMountsResult.metadata.error);
       const errMessage = siteError || configError || slotConfigError || storageMountsError || t('configUpdateFailure');
       portalContext.stopNotification(notificationId, false, errMessage);
     }
