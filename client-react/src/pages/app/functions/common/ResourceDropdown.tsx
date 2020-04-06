@@ -39,7 +39,11 @@ const ResourceDropdown: React.SFC<ResourceDropdownProps & CustomDropdownProps & 
   useEffect(() => {
     SiteService.fetchApplicationSettings(resourceId).then(r => {
       if (!r.metadata.success) {
-        LogService.error(LogCategories.bindingResource, 'getAppSettings', `Failed to get appSettings: ${r.metadata.error.error.message}`);
+        LogService.error(
+          LogCategories.bindingResource,
+          'getAppSettings',
+          `Failed to get appSettings: ${r.metadata.error && r.metadata.error.message}`
+        );
         return;
       }
       setAppSettings(r.data);

@@ -56,7 +56,7 @@ export default class FunctionCreateData {
 
     FunctionsService.createFunction(resourceId, functionName, functionFiles, functionConfig).then(r => {
       if (!r.metadata.success) {
-        const errorMessage = r.metadata.error && r.metadata.error.error && r.metadata.error.error.message;
+        const errorMessage = r.metadata.error && r.metadata.error.message;
         portalCommunicator.stopNotification(
           notificationId,
           false,
@@ -83,7 +83,7 @@ export default class FunctionCreateData {
 
     SiteService.updateApplicationSettings(resourceId, appSettings).then(r => {
       if (!r.metadata.success) {
-        const errorMessage = (r.metadata.error && r.metadata.error.error && r.metadata.error.error.message) || t('configUpdateFailure');
+        const errorMessage = (r.metadata.error && r.metadata.error.message) || t('configUpdateFailure');
         portalCommunicator.stopNotification(notificationId, false, errorMessage);
         return;
       }

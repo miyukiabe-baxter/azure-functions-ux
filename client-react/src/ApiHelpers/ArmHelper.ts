@@ -185,17 +185,22 @@ const MakeArmCall = async <T>(requestObject: ArmRequestObject<T>): Promise<HttpR
   return retObj;
 };
 
+// Error objects returned don't have a consistent format, so we need to extract error
+// objects based on known formats and convert to a common format.
 const extractErrorObject = (content: any): any => {
   if (!content) {
     return null;
   }
 
+  // Some errors are wrapped in an outer "error" object. If an outer "error" wrapper is
+  // present, just use the inner "error" object.
   const error = content.error !== undefined ? content.error : content;
 
-  if (error && error.message) {
-    const message = error.message;
-    delete error.message;
-    error.Message = message;
+  // Ensure that the name of the "message" property has the proper casing ("message" instead of "Message").
+  if (error && error.Message) {
+    const message = error.Message;
+    delete error.Message;
+    error.message = message;
   }
 
   return error;

@@ -121,7 +121,7 @@ const createOrUpdateBinding = (
 
     SiteService.updateApplicationSettings(armFunctionDescriptor.getSiteOnlyResourceId(), newBindingInfo['newAppSettings']).then(r => {
       if (!r.metadata.success) {
-        const errorMessage = (r.metadata.error && r.metadata.error.error && r.metadata.error.error.message) || t('configUpdateFailure');
+        const errorMessage = (r.metadata.error && r.metadata.error.message) || t('configUpdateFailure');
         portalCommunicator.stopNotification(updateAppSettingsNotificationId, false, errorMessage);
       } else {
         portalCommunicator.stopNotification(updateAppSettingsNotificationId, true, t('configUpdateSuccess'));
@@ -152,7 +152,7 @@ const createOrUpdateBinding = (
       // Refresh on failure to get actual state
       bindingEditorContext.refreshIntegrate();
 
-      const errorMessage = (r.metadata.error && r.metadata.error.error && r.metadata.error.error.message) || '';
+      const errorMessage = (r.metadata.error && r.metadata.error.message) || '';
       portalCommunicator.stopNotification(
         updateBindingNotificationId,
         false,
@@ -207,7 +207,7 @@ export const deleteBinding = (
         // Refresh on failure to get actual state
         bindingEditorContext.refreshIntegrate();
 
-        const errorMessage = (r.metadata.error && r.metadata.error.error && r.metadata.error.error.message) || '';
+        const errorMessage = (r.metadata.error && r.metadata.error.message) || '';
         portalCommunicator.stopNotification(
           notificationId,
           false,

@@ -425,7 +425,7 @@ const changeSiteToExistingPlan = async (
     success = true;
   } else {
     const updateSiteError =
-      siteResponse.metadata.error && siteResponse.metadata.error.Message ? siteResponse.metadata.error.Message : planDescriptor.name;
+      siteResponse.metadata.error && siteResponse.metadata.error.message ? siteResponse.metadata.error.message : planDescriptor.name;
     portalCommunicator.stopNotification(notificationId, false, t('changePlanFailureNotificationFormat').format(updateSiteError));
     LogService.trackEvent(
       LogCategories.changeAppPlan,
@@ -455,7 +455,7 @@ const changeSiteToNewPlan = async (
     );
 
     if (!rgResponse.metadata.success) {
-      const createRgError = rgResponse.metadata.error && rgResponse.metadata.error.Message ? rgResponse.metadata.error.Message : rgName;
+      const createRgError = rgResponse.metadata.error && rgResponse.metadata.error.message ? rgResponse.metadata.error.message : rgName;
       portalCommunicator.stopNotification(notificationId, false, t('changePlanRgCreateFailureNotificationFormat').format(createRgError));
       LogService.trackEvent(
         LogCategories.changeAppPlan,
@@ -507,8 +507,8 @@ const changeSiteToNewPlan = async (
 
   if (!serverFarmResponse.metadata.success) {
     const createPlanError =
-      serverFarmResponse.metadata.error && serverFarmResponse.metadata.error.Message
-        ? serverFarmResponse.metadata.error.Message
+      serverFarmResponse.metadata.error && serverFarmResponse.metadata.error.message
+        ? serverFarmResponse.metadata.error.message
         : planDescriptor.name;
     portalCommunicator.stopNotification(notificationId, false, t('changePlanPlanCreateFailureNotificationFormat').format(createPlanError));
 
@@ -532,7 +532,7 @@ const changeSiteToNewPlan = async (
   const siteResponse = await SiteService.updateSite(site.id, site);
   if (!siteResponse.metadata.success) {
     const updateSiteError =
-      siteResponse.metadata.error && siteResponse.metadata.error.Message ? siteResponse.metadata.error.Message : planDescriptor.name;
+      siteResponse.metadata.error && siteResponse.metadata.error.message ? siteResponse.metadata.error.message : planDescriptor.name;
     portalCommunicator.stopNotification(notificationId, false, t('changePlanFailureNotificationFormat').format(updateSiteError));
 
     LogService.trackEvent(

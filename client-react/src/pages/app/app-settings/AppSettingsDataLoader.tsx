@@ -340,10 +340,10 @@ const AppSettingsDataLoader: React.FC<AppSettingsDataLoaderProps> = props => {
       }
       portalContext.stopNotification(notificationId, true, t('configUpdateSuccess'));
     } else {
-      const siteError = siteResult!.metadata.error && siteResult!.metadata.error.Message;
-      const configError = configResult!.metadata.error && configResult!.metadata.error.Message;
-      const slotConfigError = slotConfigNamesResult && slotConfigNamesResult.metadata.error && slotConfigNamesResult.metadata.error.Message;
-      const storageMountsError = storageMountsResult && storageMountsResult.metadata.error && storageMountsResult.metadata.error.Message;
+      const siteError = siteResult!.metadata.error && siteResult!.metadata.error.message;
+      const configError = configResult!.metadata.error && configResult!.metadata.error.message;
+      const slotConfigError = slotConfigNamesResult && slotConfigNamesResult.metadata.error && slotConfigNamesResult.metadata.error.message;
+      const storageMountsError = storageMountsResult && storageMountsResult.metadata.error && storageMountsResult.metadata.error.message;
       const errMessage = siteError || configError || slotConfigError || storageMountsError || t('configUpdateFailure');
       portalContext.stopNotification(notificationId, false, errMessage);
     }
